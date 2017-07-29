@@ -1,124 +1,149 @@
-#OBd
+# these are debug files
+# cant show it...
 
+# this is the empty list for the strf() to append the 'el'
 cc=[]
-# print(cc)
+super_list=[]
+def r(i):
+    # Faster .remove function, for these lists
+    i.remove(i[0])
 
-# for i in cc:
-    # print(i)
+def sp(i,b,c):
+    if type(i) == str:
+        # print("is str")
+        i = i.split(b,c)
+    elif type(i) == list:
+        # print("is list")
+        i = i[0].split(b,c)
+    return i
 
 
-# filters indiv string and returns it clean
+def strf():
+    # open string data file
+    with open("sdata.txt", encoding='utf8') as infile:
+        for strv in infile:
+            # print(strv)
+            strv = strv.split("<a style=")
+            for idx,el in enumerate(strv):
+                # print(idx,"#####", el)
+                cc.append(el)
+    cc.remove(cc[0])
+strf()
+
+def listfilter():
+    # sorts trough data in cc and execs the indstring function
+    for i in cc:
+        i = str(i)
+        # print(i)
+        indstring(i)
 
 def indstring(a):
-    def semicol1():
-        global semi_str, bkc_dict, oleft_dict, toleft_dict, major_list
+    def semicoltrue(a):
+        global bkc_dict, oleft_dict, toleft_dict, major_list, super_list
 
-        bkc = semi_str[0]
-        bkc_dict = {"background color":bkc.strip()}
+        a = a.split(';"', 1)
+        ac = a[0].split()
+        bkc =ac[1]
 
-        semi_str = semi_str[1].split('="')
-
-        semi_oleft = semi_str[2]
-        semi_toleft = semi_str[1]
-
-        semi_oleft = semi_oleft.split('">')
-        semi_oleft[1] = semi_oleft[1].split('</')
-        semi_oleft[1] = semi_oleft[1][0]
-
-        oleft_dict = {semi_oleft[0]:semi_oleft[1]}
-
-
-        semi_toleft = semi_toleft.split('">')
-        semi_toleft = semi_toleft[1]
-        semi_toleft = semi_toleft.split('<br>')
-        semi_toleft = semi_toleft[0]
-
-        toleft_dict = {"texto #OBd":semi_toleft}
-
-        major_list = [bkc_dict,oleft_dict,toleft_dict]
-
-        print(major_list)
-
-    if ';"' in a:
-        global a2
-        a2 = a
-        # a2 is for the semicol2()
-
-        a = a.split(';"',1)
-        # for a_idx,i in enumerate(a):
-        #     a.remove(a[0])
+        bkc_dict={"background color": bkc}
 
         a.remove(a[0])
-        global aa
 
-        aa = a[0]
-        aa = aa.split("background-color:")
+        a = a[0].split('"texto oleft">')
+        a.remove(a[0])
+        a = a[0].split('<br>')
+        toleft=a[0]
+
+        toleft_dict = {"texto oleft": toleft}
+
+        a.remove(a[0])
+        a = a[0].split('codigo oleft">')
+        a.remove(a[0])
+        a = a[0].split('</span>',1)
+        oleft = a[0]
+
+        oleft_dict ={"codigo oleft": oleft}
+
+        major_list =[bkc_dict, toleft_dict, oleft_dict]
+
+        # print(major_list)
+        super_list.append(major_list)
+    # #####################################################################
+
+    def semicolFalse(a):
+        global bkc_dict, oleft_dict, toleft_dict, major_list, super_list
+        a = sp(a,"#",1)
+        r(a)
+        a= sp(a,'"',1)
+        bkc=a[0]
+        bkc_dict = {"background color":("#"+bkc)}
+
+        r(a)
+        a = sp(a, '"texto #OBd">',1)
+        r(a)
+        a = sp(a,"<br>",1 )
+        toleft=a[0]
+        toleft_dict={"texto #OBd":toleft}
+        r(a)
+
+        a = sp(a,'"codigo #OBd">',1)
+        r(a)
+
+        a = sp(a,"</span>",1)
+        oleft=a[0]
+
+        oleft_dict={"codigo #OBd":oleft}
+
+        major_list = [bkc_dict, toleft_dict, oleft_dict]
+        # print(major_list)
+
+        super_list.append(major_list)
 
 
 
 
-    # for b_idx,j in enumerate(aa):
-    #     aa.remove(aa[0])
-
-    # aa is a semi def filtered string save as global for future use
-
-    # the problem is that a few strings have a ;" after de #color, and the rest has just a '"' after it
-    # since the split is ';"' the rest is not computing..
-    def jump():
 
 
-        sct=False
-        # sct = semicolon true, it indicates if the if ';"' was activated
-        
-        for i in aa:
-            if ';"' in i:
-                sct=True
-        
-                global semi_str
-                aa.remove(aa[0])
-                semi_str = aa[0].split(';"', 1)
-                # print('it has ;"   ',i)
-                # print('start semicol 1,  for '';"'' filtering ')
-                semicol1()
-        
-        # if it dosent have a ';"' it will exec here:
-        def semicol2():
-        
-            aa2= a2.split("#")
-            aa2.remove(aa2[0])
-            aa2.remove(aa2[1])
-        
-            semi2 = aa2[0].split('"', 1)
-            global bkc2_dict, toleft2_dict, oleft2_dict
-        
-            bkc2 = semi2[0]
-        
-        
-            bkc2_dict = {"background #OBd": ("#"+bkc2)}
-        
-        
-            az= a[0].split('"texto #OBd">')
-            az = az[1].split('<br>')
-            azz=az[0]
-        
-            toleft2_dict = {"texto #OBd":azz}
-        
-            az.remove(az[0])
-            # print(az)
-            az=az[0].split('"codigo #OBd">')
-            az.remove(az[0])
-            az=az[0].split('</',1)
-            oleft2_dict={"codigo #OBd":az[0]}
-        
-            major_list = [bkc2_dict, oleft2_dict, toleft2_dict]
-        
-            print(major_list)
-        
-        if sct == False:
-            semicol2()
-    
-#
-indstring(test)
+    # this is the semicol identifier for the semicol functions ..
+    if ';"'in a:
+        # print('there is a semicol  ')
+        semicoltrue(a)
+    else:
+        # print("no semicol  ")
+        semicolFalse(a)
 
-# indstring(test2)
-# indstring(test3)
+listfilter()
+
+for idx, el in enumerate(super_list):
+    print(idx, el)
+
+def ask():
+
+    nome = input("Nome da cor:")
+    nome =str(nome)
+    nome = nome.lower()
+
+    for idx,el in enumerate(super_list):
+        # print(idx, el)
+        templ = []
+        for subel in el:
+            templ.append(subel)
+
+        for i in templ:
+            if 'texto #OBd' in i:
+                # print(i['texto oleft'])
+            #     ####################
+                zi=i['texto #OBd']
+
+                if nome in zi.lower():
+                    print("")
+                    print("Correspondencia de ",nome," em:")
+                    print(templ)
+                else:
+                    pass
+
+    input("#                    #")
+    print("")
+    ask()
+ask()
+
